@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calorie Counter</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+  #container {
+    text-align: center;
+    padding: 20px;
+  }
+  #calories-remaining {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  #settings-icon {
+    cursor: pointer;
+    font-size: 24px;
+  }
+  /* Modal Styling */
+  #settings-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  .modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+</style>
+</head>
+<body>
+<div id="container">
+  <div id="calories-remaining">
+    Calories Remaining: <span id="remaining">0</span>
+  </div>
+  <div>
+    <input type="number" id="current-calories" placeholder="Calories to Add/Subtract">
+    <button id="add-button">+</button>
+    <button id="subtract-button">-</button>
+    <span id="settings-icon">⚙️</span>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div id="settings-modal">
+  <div class="modal-content">
+    <label for="goal-input">Goal: </label>
+    <input type="number" id="goal-input">
+    <button id="save-goal-button">Save</button>
+  </div>
+</div>
+
+<script>
+  const remainingElement = document.getElementById('remaining');
+  const currentCaloriesInput = document.getElementById('current-calories');
+  const addButton = document.getElementById('add-button');
+  const subtractButton = document.getElementById('subtract-button');
+  const settingsIcon = document.getElementById('settings-icon');
+  const settingsModal = document.getElementById('settings-modal');
+  const goalInput = document.getElementById('goal-input');
+  const saveGoalButton = document.getElementById('save-goal-button');
+
+  let remainingCalories = 0;
+  let goalCalories = 2000; // Default goal
+
+  function updateRemainingCalories(value) {
+    remainingCalories += value;
+    remainingElement.textContent = remainingCalories;
+  }
+
+  function updateGoal() {
+    const newGoal = parseInt(goalInput.value);
+    if (!isNaN(newGoal)) {
+      goalCalories = newGoal;
+      updateRemainingCalories(newGoal - remainingCalories); // Adjust remaining calories
+      remainingElement.textContent = goalCalories;
+      closeModal();
+    }
+  }
+
+  function openModal() {
+    settingsModal.style.display = 'block';
+  }
+
+  function closeModal() {
+    settingsModal.style.display = 'none';
+  }
+
+  addButton.addEventListener('click', () => {
+    const caloriesToAdd = parseInt(currentCaloriesInput.value);
+    if (!isNaN(caloriesToAdd)) {
+      updateRemainingCalories(caloriesToAdd);
+      currentCaloriesInput.value = '';
+    }
+  });
+
+  subtractButton.addEventListener('click', () => {
+    const caloriesToSubtract = parseInt(currentCaloriesInput.value);
+    if (!isNaN(caloriesToSubtract)) {
+      updateRemainingCalories(-caloriesToSubtract);
+      currentCaloriesInput.value = '';
+    }
+  });
+
+  settingsIcon.addEventListener('click', openModal);
+
+  saveGoalButton.addEventListener('click', updateGoal);
+</script>
+</body>
+</html>
